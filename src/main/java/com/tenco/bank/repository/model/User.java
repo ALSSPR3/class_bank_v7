@@ -18,5 +18,5 @@ public class User {
 	private String username;
 	private String password;
 	private String fullname;
-	private Timestamp cretedAt;
+	private Timestamp createdAt;
 }
