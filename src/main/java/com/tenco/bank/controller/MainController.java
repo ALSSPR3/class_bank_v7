@@ -1,5 +1,6 @@
 package com.tenco.bank.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.handler.exception.RedirectException;
 import com.tenco.bank.handler.exception.UnAuthorizedExeception;
+import com.tenco.bank.service.UserService;
 
 @Controller // IoC 대상(싱글톤 패턴 관리가 된다.) --> 제어의 역전
 public class MainController {
 	
+
 	// REST API 기반으로 주소설계 가능
 	
 	// 주소설계 
