@@ -1,4 +1,4 @@
-package com.tenco.bank.handler.exceotion;
+package com.tenco.bank.handler.exception;
 
 import org.springframework.http.HttpStatus;
 
