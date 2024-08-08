@@ -51,10 +51,10 @@ public class GlobalControllerAdvice {
 	@ExceptionHandler(UnAuthorizedExeception.class)
 	public String unAuthorizedException(UnAuthorizedExeception e) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("<script>");
-		sb.append("alert('" + e.getMessage() + "');");
-		sb.append("window.history.back();");
-		sb.append("</script>");
+		sb.append(" <script> ");
+		sb.append(" alert('" + e.getMessage() + "'); ");
+		sb.append(" location.href='/user/sign-in'; ");
+		sb.append(" </script> ");
 
 		return sb.toString();
 	}
