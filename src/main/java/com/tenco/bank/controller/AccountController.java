@@ -1,7 +1,10 @@
 package com.tenco.bank.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +32,6 @@ public class AccountController {
 
 	/**
 	 * 계좌 생성 페이지 요청 주소 설계: http://localhost:8080/account/save
-	 * 
 	 * @return
 	 */
 	@GetMapping("/save")
@@ -44,8 +46,7 @@ public class AccountController {
 	}
 
 	/**
-	 * 계좌 생성 요청 처리
-	 * 
+	 * 계좌 생성 요청 처리 주소 설계: http://localhost:8080/account/save
 	 * @param dto
 	 * @return
 	 */
@@ -56,25 +57,45 @@ public class AccountController {
 		// 3. 유효성 검사
 		// 4. 서비스 호출
 		User principal = (User) session.getAttribute("principal");
-		if(principal == null) {
+		if (principal == null) {
 			throw new UnAuthorizedExeception("인증된 사용자가 아닙니다.", HttpStatus.UNAUTHORIZED);
 		}
-		if(dto.getNumber() == null || dto.getNumber().isEmpty()) {
+		if (dto.getNumber() == null || dto.getNumber().isEmpty()) {
 			throw new DataDeliveryException("계좌 번호를 입력하세요.", HttpStatus.BAD_REQUEST);
-		} else if(dto.getPassword() == null || dto.getPassword().isEmpty()) {
+		} else if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
 			throw new DataDeliveryException("계좌 비밀 번호를 입력하세요.", HttpStatus.BAD_REQUEST);
-		} else if(dto.getBalance() == null || dto.getBalance() <= 0) {
+		} else if (dto.getBalance() == null || dto.getBalance() <= 0) {
 			throw new DataDeliveryException("계좌 잔액을 입력하세요.", HttpStatus.BAD_REQUEST);
 		}
-		
+
 		accountService.createAccount(dto, principal.getId());
-		
+
 		return "redirect:/index";
 	}
 
-	@GetMapping("/list")
-	public String listPage() {
+	/**
+	 * 계좌 목록 화면 요청 주소 설계 : http://localhost:8080/account/list, .../
+	 * 
+	 * @return
+	 */
+	@GetMapping({ "/list", "/" })
+	public String listPage(Model model) {
+
+		// 1. 인증 검사
+		User principal = (User) session.getAttribute("principal");
+		if (principal == null) {
+			throw new UnAuthorizedExeception("인증된 사용자가 아닙니다.", HttpStatus.UNAUTHORIZED);
+		}
+		// 2. 유효성 검사
+		// 3. 서비스 호출
+		List<Account> accountList = accountService.readAccounListById(principal.getId());
+		if (accountList.isEmpty()) {
+			model.addAttribute("accountList", null);
+		} else {
+			model.addAttribute("accountList", accountList);
+		}
+		// JSP 데이터를 넣어 주는 방법
+
 		return "account/list";
 	}
-
 }
