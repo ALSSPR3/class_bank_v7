@@ -115,4 +115,5 @@ public class UserController {
 		session.invalidate(); // 로그아웃 됨
 		return "redirect:/user/sign-in";
 	}
+	
 }
