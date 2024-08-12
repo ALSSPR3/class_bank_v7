@@ -11,7 +11,8 @@
 
 	<form action="/account/transfer" method="post">
 		<div class="form-group">
-			<label for="amount">출금 금액:</label> <input type="number" class="form-control" placeholder="Enter amount" id="amount" name="amount" value="1000">
+			<label for="amount">출금 금액:</label> 
+			<input type="number" class="form-control" placeholder="Enter amount" id="amount" name="amount" value="1000">
 		</div>
 		<div class="form-group">
 			<label for="wAccountNumber">출금 계좌 번호:</label> <input type="text" class="form-control" placeholder="Enter account Number" id="wAccountNumber" name="wAccountNumber" value="1111">
