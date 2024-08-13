@@ -14,28 +14,25 @@ import com.tenco.bank.repository.interfaces.UserRepository;
 import com.tenco.bank.repository.model.User;
 import com.tenco.bank.utils.Define;
 
+import lombok.RequiredArgsConstructor;
+
 @Service // IoC 대상 (싱글톤으로 관리)
+@RequiredArgsConstructor
 public class UserService {
 
 	// DI - 의존 주입
-	private UserRepository userRepository;
-	
-//	@Autowired 어노테이션으로 대체 가능 하다.
-//	생성자 의존 주입 - DI
 	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
-	
+	private final UserRepository userRepository;
+
 	/**
-	 * 회원 등록 서비스 기능
-	 * 트랜잭션 처리
+	 * 회원 등록 서비스 기능 트랜잭션 처리
+	 * 
 	 * @param dto
 	 */
 	@Transactional // 트랜잭션 처리는 반드시 습관화
 	public void createUser(SignUpDTO dto) {
 		int result = 0;
-		
+
 		try {
 			result = userRepository.insert(dto.toUser());
 		} catch (DataAccessException e) {
@@ -43,14 +40,14 @@ public class UserService {
 		} catch (Exception e) {
 			throw new RedirectException(Define.UNKNOWN, HttpStatus.SERVICE_UNAVAILABLE);
 		}
-		if(result != 1) {
+		if (result != 1) {
 			throw new DataDeliveryException(Define.FAIL_TO_CREATE_USER, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	public User readUser(SignInDTO dto) {
 		// 유효성 검사는 Controller 에서 먼저 하자.
-		User userEntity = null; // 지역 변수 선언	
+		User userEntity = null; // 지역 변수 선언
 		try {
 			userEntity = userRepository.findByUsernameAndPassword(dto.getUsername(), dto.getPassword());
 		} catch (DataAccessException e) {
@@ -58,7 +55,7 @@ public class UserService {
 		} catch (Exception e) {
 			throw new RedirectException(Define.UNKNOWN, HttpStatus.SERVICE_UNAVAILABLE);
 		}
-		if(userEntity == null) {
+		if (userEntity == null) {
 			throw new DataDeliveryException("아이디 혹은 비밀번호가 틀렸습니다", HttpStatus.BAD_REQUEST);
 		}
 		return userEntity;

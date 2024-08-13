@@ -3,6 +3,7 @@ package com.tenco.bank.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,18 +25,17 @@ import com.tenco.bank.repository.model.User;
 import com.tenco.bank.service.AccountService;
 import com.tenco.bank.utils.Define;
 
-import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Controller // IoC 대상 (싱글톤으로 관리)
 @RequestMapping("/account")
+@RequiredArgsConstructor
 public class AccountController {
 
+	@Autowired
 	private final AccountService accountService;
 
-	public AccountController(HttpSession session, AccountService accountService) {
-		this.accountService = accountService;
-	}
-
+	
 	/**
 	 * 계좌 생성 페이지 요청 주소 설계: http://localhost:8080/account/save
 	 * 

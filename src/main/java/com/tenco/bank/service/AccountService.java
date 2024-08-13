@@ -3,6 +3,7 @@ package com.tenco.bank.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,17 +25,16 @@ import com.tenco.bank.repository.model.User;
 import com.tenco.bank.utils.Define;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
+	@Autowired
 	private final AccountRepository accountRepository;
 	private final HistoryRepository historyRepository;
 
-	public AccountService(AccountRepository accountRepository, HistoryRepository historyRepository) {
-		this.accountRepository = accountRepository;
-		this.historyRepository = historyRepository;
-	}
 
 	/**
 	 * 계좌 생성 기능
