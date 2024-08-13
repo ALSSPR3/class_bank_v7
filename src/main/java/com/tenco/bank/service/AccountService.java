@@ -204,17 +204,25 @@ public class AccountService {
 		return accountEntitiy;
 	}
 
+
 	/**
 	 * 단일 계좌 거래 내역 조회
 	 * 
 	 * @param type      = [all, deposit, withdrawal]
-	 * @param accountId = (pk)
+	 * @param accountId (pk)
 	 * @return 전체, 입금, 출금 거래내역(3가지 타입) 반환
 	 */
-//	@Transactional
-	public List<HistoryAccount> readHistoryByAccount(String type, Integer accountId) {
-		List<HistoryAccount> historyAccountListEntitiy = new ArrayList<>();
-		historyAccountListEntitiy = historyRepository.findByAccountIdAndTypeOfHistory(type, accountId);
-		return historyAccountListEntitiy;
+	// @Transactional
+	public List<HistoryAccount> readHistoryByAccountId(String type, Integer accountId, int page, int size) {
+		List<HistoryAccount> list = new ArrayList<>();
+		int limit = size;
+		int offset = (page - 1) * size;
+		list = historyRepository.findByAccountIdAndTypeOfHistory(type, accountId, limit, offset);
+		return list;
+	}
+
+	// 해당 계좌와 거래 유형에 따른 전체 레코드 수를 반환하는 메서드
+	public int countHistoryByAccountIdAndType(String type, Integer accountId) {
+		return historyRepository.countByAccountIdAndType(type, accountId);
 	}
 }

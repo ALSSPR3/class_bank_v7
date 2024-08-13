@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.handler.exception.RedirectException;
-import com.tenco.bank.handler.exception.UnAuthorizedExeception;
+import com.tenco.bank.handler.exception.UnAuthorizedException;
 
 @ControllerAdvice // IoC 대상(싱글톤 패턴) --> HTML 렌더링 예외에 많이 사용
 public class GlobalControllerAdvice {
@@ -48,8 +48,8 @@ public class GlobalControllerAdvice {
 	}
 
 	@ResponseBody
-	@ExceptionHandler(UnAuthorizedExeception.class)
-	public String unAuthorizedException(UnAuthorizedExeception e) {
+	@ExceptionHandler(UnAuthorizedException.class)
+	public String unAuthorizedException(UnAuthorizedException e) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" <script> ");
 		sb.append(" alert('" + e.getMessage() + "'); ");

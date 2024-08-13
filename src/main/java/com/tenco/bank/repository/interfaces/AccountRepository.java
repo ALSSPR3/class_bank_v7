@@ -23,5 +23,5 @@ public interface AccountRepository {
 	public Account findByNumber(@Param("number") String id);
 	
 	public Account findByAccountId(Integer accountId);
-
+	
 }

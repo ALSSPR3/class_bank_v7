@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tenco.bank.handler.exception.UnAuthorizedExeception;
+import com.tenco.bank.handler.exception.UnAuthorizedException;
 import com.tenco.bank.repository.model.User;
 
 // Contoroller -> String ( 뷰 리졸버 동작 --> JSp 파일 찾아서 렌더링 처리.)
@@ -20,7 +20,7 @@ public class test1Controller {
 		try {
 			int result = 10/0;
 		} catch (Exception e) {
-			throw new UnAuthorizedExeception("인증이 안된 사용자 입니다.", HttpStatus.UNAUTHORIZED);
+			throw new UnAuthorizedException("인증이 안된 사용자 입니다.", HttpStatus.UNAUTHORIZED);
 		}
 		
 		return User.builder().username("길동").password("asd123").build();
