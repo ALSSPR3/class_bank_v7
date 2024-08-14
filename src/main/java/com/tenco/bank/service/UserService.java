@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,10 @@ public class UserService {
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
 
+	// 초기 파라메터 가져오는 방법
+	@Value("${file.upload-dir}")
+	private String uploadDir;
+
 	/**
 	 * 회원 등록 서비스 기능 트랜잭션 처리
 	 * 
@@ -46,7 +51,7 @@ public class UserService {
 		if (!dto.getMFile().isEmpty()) {
 			// 파일 업로드 로직 구현
 			String[] fileNames = uploadFile(dto.getMFile());
-			
+
 			dto.setOriginFileName(fileNames[0]);
 			dto.setUploadFileName(fileNames[1]);
 		}
@@ -96,26 +101,31 @@ public class UserService {
 		return userEntity;
 	}
 
+	/**
+	 * 서버 운영체제에 파일 업로드 기능 MultipartFile getOriginalFilename : 사용자가 작성한 파일 명
+	 * uploadFileName : 서버 컴퓨터에 저장 될 파일 명
+	 * 
+	 * @param mFile
+	 * @return
+	 */
 	private String[] uploadFile(MultipartFile mFile) {
-		if(mFile.getSize() > Define.MAX_FILE_SIZE) {
+		if (mFile.getSize() > Define.MAX_FILE_SIZE) {
 			throw new DataDeliveryException("파일 크기는 20MB 이상 클 수 없습니다.", HttpStatus.BAD_REQUEST);
 		}
-		
-		// 서버 컴퓨터에 파일을 넣을 디렉토리가 있는지 검사
-		String saveDirectory = Define.UPLOAD_FILE_DERECTORY;
-		File directory = new File(saveDirectory);
-		if(!directory.exists()) {
-			directory.mkdirs();
-		}
-		
+
+		// 코드 수정
+		// File - getAbsolutePath()
+		// (리눅스 또는 MacOS)에 맞춰서 절대 경로 생성을 시킬 수 있다.
+		String saveDirectory = new File(uploadDir).getAbsolutePath();
+
 		// 파일 이름 생성(중복 이름 예방)
 		String uploadFileName = UUID.randomUUID() + "_" + mFile.getOriginalFilename();
 		// 파일 전체 경로 + 새로생성한 파일명
-		String uploadPath = saveDirectory + File.separator +uploadFileName;
+		String uploadPath = saveDirectory + File.separator + uploadFileName;
 		File destination = new File(uploadPath);
-		
+
 		System.out.println(uploadPath);
-		
+
 		// 반드시 수행
 		try {
 			mFile.transferTo(destination);
@@ -123,7 +133,7 @@ public class UserService {
 			e.printStackTrace();
 			throw new DataDeliveryException("파일 업로드 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new String[] {mFile.getOriginalFilename(), uploadFileName};
+
+		return new String[] { mFile.getOriginalFilename(), uploadFileName };
 	}
 }

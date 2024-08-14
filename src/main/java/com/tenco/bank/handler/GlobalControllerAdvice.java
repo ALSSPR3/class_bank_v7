@@ -31,8 +31,6 @@ public class GlobalControllerAdvice {
 	 *  @ResponseBody 활용
 	 *  - 브라우저에서 자바스크립트 코드로 동작 하게 됨
 	 */
-	
-
 	// 예외를 내릴 때 데이터를 내리고 싶다면 1. @RestControllerAdvice 를 사용하면 된다.
 	// 단, @ControllerAdvice 사용하고 있다면 @ResponseBody 를 붙혀 사용하면 된다
 	@ResponseBody

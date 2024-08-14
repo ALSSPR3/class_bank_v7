@@ -57,7 +57,14 @@
 					<div class="col-sm-4">
 						<h2>About Me</h2>
 						<h5>Photo of me:</h5>
-						<div class="m--profile"></div>
+						<c:choose>
+							<c:when test="${principal != null}">
+								<img class="my--profile" alt="" src="${principal.setUpUserImage()}">
+							</c:when>
+							<c:otherwise>
+								<div class="m--profile"></div>	
+							</c:otherwise>
+						</c:choose>
 						<p>뱅크 앱 개발</p>
 						<h3>서비스 목록</h3>
 						<p>계좌 목록, 생성, 출금, 입금, 이체 페이지를 활용할 수 있어요</p>

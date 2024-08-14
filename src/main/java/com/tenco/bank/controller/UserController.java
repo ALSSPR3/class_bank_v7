@@ -1,17 +1,28 @@
 package com.tenco.bank.controller;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tenco.bank.dto.SignInDTO;
 import com.tenco.bank.dto.SignUpDTO;
 import com.tenco.bank.handler.exception.DataDeliveryException;
 import com.tenco.bank.repository.model.User;
-import com.tenco.bank.service.AccountService;
 import com.tenco.bank.service.UserService;
 import com.tenco.bank.utils.Define;
 
@@ -26,7 +37,6 @@ public class UserController {
 	@Autowired // 노란색 경고는 사용할 필요 없음 - 가독성을 위해서 선언해도 됨
 	private final UserService userService;
 	private final HttpSession session;
-
 
 	/**
 	 * 회원 가입 페이지 요청 주소 설계 : http://localhost:8080/user/sign-up
@@ -103,7 +113,7 @@ public class UserController {
 		// TODO - 계좌 목록 페이지 이동처리 예정
 		return "redirect:/account/list";
 	}
-	
+
 	/**
 	 * 로그아웃 요청 처리
 	 * 
@@ -114,5 +124,36 @@ public class UserController {
 		session.invalidate(); // 로그아웃 됨
 		return "redirect:/user/sign-in";
 	}
-	
+
+	@GetMapping("/kakao")
+	@ResponseBody
+	public ResponseEntity<?> kakaoSingIn(@RequestParam("code") String code) {
+
+		System.out.println("Code : " + code);
+		
+		URI uri = UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/token").path("/" + code).build()
+				.toUri();
+
+		RestTemplate restTemplate1 = new RestTemplate();
+
+		// 1. 헤더 구성
+		HttpHeaders headers = new HttpHeaders();
+		// 'Content-type': 'application/json; charset=UTF-8'
+		headers.add("Content-type", "application/json; charset=UTF-8");
+
+		// 2. 바디 구성
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+		// 3. 헤더와 바디 결합 --> HttpEntitiy Object
+		HttpEntity<MultiValueMap<String, String>> requestEntitiy = new HttpEntity<>(params, headers);
+
+		// 4. RestTemplate 을 활용해서 HTTP 통신 요청
+		ResponseEntity<String> responseEntity = restTemplate1.exchange(uri, HttpMethod.POST, requestEntitiy,
+				String.class);
+
+		System.out.println("response Header : " + responseEntity.getHeaders());
+		System.out.println("response Body : " + responseEntity.getBody());
+
+		return null;
+	}
 }

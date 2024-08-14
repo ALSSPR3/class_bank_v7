@@ -21,5 +21,8 @@ public class User {
 	private String originFileName;
 	private String uploadFileName;
 	private Timestamp createdAt;
-	
+
+	public String setUpUserImage() {
+		return uploadFileName == null ? "https://picsum.photos/id/40/400/400" : "/images/uploads/" + uploadFileName;
+	}
 }

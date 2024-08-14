@@ -25,6 +25,11 @@
 		<div class="d-flex justify-content-end">
 			<button type="submit" class="btn btn-primary mt-md-4">회원가입</button>
 		</div>
+		<div>
+			<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=85e512a7442b5f870c18abd789366108&redirect_uri=http://localhost:8080/user/kakao">
+				<img alt="" src="/images/kakao_login_medium.png">
+			</a>
+		</div>
 	</form>
 
 	<script>
